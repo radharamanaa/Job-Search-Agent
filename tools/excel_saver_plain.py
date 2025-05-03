@@ -20,12 +20,15 @@ def save_to_csv(title: str, description: str, url: str, filename: str = "data.cs
     # Check if file exists to determine if we need to write headers
     import datetime
     import time
-    filename = filename[:filename.rfind(".")]
-    filename+= str(datetime.datetime.now())[:10]+f"_{int(time.time())}" +".csv"
-    file_exists = os.path.isfile(filename)
+    time.sleep(2)
+    # filename = filename[:filename.rfind(".")]
+    # filename+= str(datetime.datetime.now())[:10]+f"_{int(time.time())}" +".csv"
+    __create_dir_in_curr_folder("test")
+    joined_path_to_file = os.path.join("test", filename)
+    file_exists = os.path.isfile(joined_path_to_file)
 
     # Open file in append mode ('a+')
-    with open(filename, mode='a+', newline='', encoding='utf-8') as file:
+    with open(joined_path_to_file, mode='a+', newline='', encoding='utf-8') as file:
         writer = csv.DictWriter(file, fieldnames=fieldnames)
 
         # Write headers if file is being created for the first time
@@ -39,3 +42,8 @@ def save_to_csv(title: str, description: str, url: str, filename: str = "data.cs
             'url': url
         })
     return "Success"
+
+def __create_dir_in_curr_folder(name:str):
+    import os
+    if not os.path.exists(name):
+        os.mkdir(path=name)

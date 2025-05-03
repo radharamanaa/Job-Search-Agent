@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "agno>=1.4.0",
+    "azure-cognitiveservices-search-websearch>=2.0.1",
     "duckduckgo-search>=8.0.1",
     "duckduckpy>=0.2",
     "fastapi[stamdard]>=0.115.12",
@@ -16,6 +17,12 @@ dependencies = [
     "openai>=1.75.0",
     "python-dotenv>=1.1.0",
     "requests>=2.32.3",
+    "streamlit>=1.45.0",
     "tavily-python>=0.5.4",
+    "trafilatura>=2.0.0",
     "uvicorn>=0.34.2",
+    "PyPDF2>=3.0.0",
+    "python-docx>=0.8.11",
 ]
+
+

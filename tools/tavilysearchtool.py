@@ -11,7 +11,7 @@ tavily_api_key = os.getenv("TAVILY_API_KEY")
 
 import logging
 # Configure logging to capture DEBUG-level messages
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class SearchDataFromTool(BaseModel):
