@@ -113,21 +113,3 @@ def call_agent_and_return_state(resume:str, user_prompt: str):
     )
     agent.run(final_prompt)
     return agent.session_state
-
-resume = """
-I am into Java, ReactJS, Typescript, SQL, MYSQL, NOSQL, MongoDB and an AWS Certified Developer with 8+ years of experience and currently a Technical Architect.
-I am also into Python and AI development including RAG pipeline and Agentic RAG. """
-
-user_prompt = """
-
-Please search remote jobs for me, strictly who are looking for complete remote. Give me pages where i can apply for jobs directly.
-If possible give me pages of the company itself.
-
-Please scrape the webpages as needed and give me the urls which i can directly click apply or contact the recruiter directly.
-
-I am searching for jobs in the dach region in Europe, if possible find companies which sponsor the visa.
-Give direct company pages where i can apply. Or linkedin i dont want any other site.
-
-Please find only 1 job for me. Find jobs which are very close to my experience and seniority. I am ok with Senior Team lead also"""
-# state = call_agent_and_return_state(resume, user_prompt=user_prompt)
-# print(state)
