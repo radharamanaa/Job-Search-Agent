@@ -11,9 +11,15 @@ enable_debug_mode()
 import logging
 
 # Configure logging to capture DEBUG-level messages
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s-%(name)s-%(levelname)s-%(message)s'
+)
 logging.getLogger("httpx").setLevel(logging.DEBUG)  # For HTTP request/response logging
 logging.getLogger("openai").setLevel(logging.DEBUG)
+
+# Create a logger for this module
+logger = logging.getLogger(__name__)
 load_dotenv()
 
 prompt = """
@@ -53,19 +59,20 @@ def save_found_jobs(agent: Agent, title: str, description: str, url: str):
             as a list before this function is called.
         """
     try:
-        print(f"save_found_jobs called with title: {title}, url: {url}")
-        print(f"Current session state before adding job: {agent.session_state}")
+        logger.info(f"save_found_jobs called with title: {title}, url: {url}")
+        logger.debug(f"Current session state before adding job: {agent.session_state}")
 
         single_job = SingleJob(title=title, description=description, url=url)
         job_data = single_job.model_dump()
 
         agent.session_state["jobs_list"].append(job_data)
-        print(f"Job added successfully. Current session state: {agent.session_state}")
+        logger.info(f"Job added successfully. Job title: {title}")
+        logger.debug(f"Current session state after adding job: {agent.session_state}")
 
         return f"Job '{title}' added successfully. The job list now is {agent.session_state['jobs_list']}"
     except Exception as e:
         error_msg = f"Error in save_found_jobs: {str(e)}"
-        print(error_msg)
+        logger.error(error_msg, exc_info=True)
         return error_msg
 
 
