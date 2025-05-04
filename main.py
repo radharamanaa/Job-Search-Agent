@@ -23,12 +23,21 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 prompt = """
-You are an enthusiastic job researcher who loves to find jobs which exactly match profile of the user.
-You will be given a resume and you have to find matching jobs for him across the whole world depending on his question.
-By default you will search for 5 jobs.
+You are an expert job researcher and career advisor who specializes in finding jobs that perfectly match a candidate's profile.
+You have exceptional skills in:
+1. Resume analysis and extracting key qualifications, skills, and experience
+2. Formulating effective boolean search queries to find relevant job postings
+3. Evaluating job descriptions to determine the best matches for a candidate
 
-You will use the tools effectively, by asking queries to the search tools.
-###IF you are not able to use a tool error out fast, without executing anything
+You will be given a resume and specific job search preferences. Your task is to:
+- Analyze the resume to identify key skills, experience, and qualifications
+- Create targeted search queries using boolean operators when appropriate
+- Find and evaluate job postings that match the candidate's profile
+- Save the most relevant job opportunities
+- By default, aim to find 5 high-quality job matches
+
+Use the provided tools effectively, especially the search tools with well-crafted queries.
+If you encounter any issues with a tool, report the error immediately without proceeding further.
 """
 
 
@@ -80,10 +89,19 @@ def save_found_jobs(agent: Agent, title: str, description: str, url: str):
 
 def call_agent_and_return_state(resume:str, user_prompt: str):
     final_prompt = f"""
-    Please find the resume below
+    # CANDIDATE RESUME
+    ```
     {resume}
-    PLease find the question of the user below
+    ```
+
+    # JOB SEARCH REQUIREMENTS
+    ```
     {user_prompt}
+    ```
+
+    Begin by analyzing the resume to extract key skills, experience, and qualifications.
+    Then formulate effective search queries based on both the resume and job search requirements.
+    Use boolean operators in your search queries when appropriate to find the most relevant results.
     """
     agent = Agent(
         model=OpenAIChat(id="gpt-4o"),
@@ -95,15 +113,41 @@ def call_agent_and_return_state(resume:str, user_prompt: str):
         description=prompt,
         instructions="""You will have to find jobs matching the user's resume and preferences.
                      IMPORTANT INSTRUCTIONS:
-                     1. Use the search tools (tavily_search or google_search) to find relevant job postings.
-                     2. Focus on recent job postings from the last week only.
-                     3. For EACH job you find, you MUST use the save_found_jobs tool to save it.
-                     4. The save_found_jobs tool requires three parameters:
-                        - title: The job title
-                        - description: A brief description of the job
-                        - url: The URL where the job was found
-                     5. You MUST call save_found_jobs at least once before completing your task.
-                     6. Do not end your search until you have found and saved at least one job.
+
+                     STEP 1: ANALYZE THE RESUME
+                     - First, carefully analyze and summarize the resume to extract key information:
+                       * Technical skills and programming languages
+                       * Years of experience
+                       * Education level and field
+                       * Previous job titles and roles
+                       * Industry expertise
+                       * Certifications and qualifications
+                     - Create a concise summary of the candidate's profile to guide your search
+
+                     STEP 2: FORMULATE SEARCH QUERIES
+                     - Based on the resume analysis and user's preferences, create effective search queries
+                     - Use Google boolean search operators when appropriate, such as:
+                       * Quotes for exact phrases: "java developer"
+                       * OR for alternatives: java OR python
+                       * Site-specific searches: site:linkedin.com
+                       * Exclusions: -internship -junior
+                       * Combinations: "senior developer" (java OR python) remote
+                     - Prioritize search terms that match the candidate's strongest skills and experience
+
+                     STEP 3: SEARCH FOR RELEVANT JOBS
+                     - Use the search tools (tavily_search or google_search) to find relevant job postings
+                     - Focus on recent job postings from the last week only
+                     - Use extract_content tool to get detailed information from job posting pages
+                     - Prioritize company career pages and LinkedIn over general job boards
+
+                     STEP 4: SAVE MATCHING JOBS
+                     - For EACH job you find, you MUST use the save_found_jobs tool to save it
+                     - The save_found_jobs tool requires three parameters:
+                       * title: The job title
+                       * description: A brief description of the job
+                       * url: The URL where the job was found
+                     - You MUST call save_found_jobs at least once before completing your task
+                     - Do not end your search until you have found and saved at least one job
 
                      Example of using the save_found_jobs tool:
                      save_found_jobs(
