@@ -182,4 +182,6 @@ def main():
             search_jobs()
 
 if __name__ == "__main__":
+    logger.info("Starting Job Search application")
     main()
+    logger.info("Job Search application exited")
